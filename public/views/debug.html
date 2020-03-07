@@ -1,0 +1,79 @@
+<!doctype html>
+<html ng-app="LogChecker">
+    <head>
+        <title>调试日志</title>
+        <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+        <link rel="stylesheet" href="/asset/css/bootstrap.min.css">
+        <link href="/asset/css/flat-ui.css" rel="stylesheet">
+
+        <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+        
+        <link href="/asset/css/index.css" rel="stylesheet">
+
+    </head>
+
+    <body style="height:100%" class ="palette palette-clouds" ng-controller="debugController">
+        <h2 style="text-align: center;">调试日志</h2>
+
+
+        <section  class="palette palette-clouds ">
+
+            <!--<h3 class="demo-panel-title">过滤</h3>-->
+            <div class="row demo-row">
+                <div class="col-xs-2">
+                  <div class=" has-success">
+                    <input type="text" value="" placeholder="==ERROR==" class="form-control" ng-model="filterValue"  />
+                    <span class="input-icon fui-check-inverted"></span>
+                  </div>
+                </div>
+                <div class="col-xs-2">
+                  <a href="#fakelink" class="btn btn-block btn-lg btn-primary" ng-click="doFilter()">only show</a>
+                </div>
+
+                <div class="col-xs-2">
+                  <a href="#fakelink" class="btn btn-block btn-lg btn-primary" ng-click="doClear()">Clear</a>
+                </div>
+
+                <div class="col-xs-2">
+                  <select class="form-control select select-primary" data-toggle="select" ng-model="curLevel">
+                    <option value="0">ERROR</option>
+                    <option value="1">WARNNING</option>
+                    <option value="2">INFO</option>
+                    <option value="3">DEBUG</option>
+                    <option value="4" selected>VERBOSE</option>
+                  </select>
+                </div>
+
+                
+            </div>
+        </section>
+
+        <section class="palette palette-clouds"  scroll-glue style="overflow-x: hidden;">
+            <ul ng-repeat="data in MyData.debugLogs | filter: myfilter" >
+              <li class="palette palette-wet-asphalt" ng-if="data.content=='--' && curLevel==4" style="text-align:center"> ------------------------------------------------------------------ 分割线 ------------------------------------------------------------------{[{data.timeStamp}]}</li>
+              <li class="palette palette-pomegranate" ng-if="data.level=='ERROR' && curLevel>=data.levelN" > <span ng-bind-html="(data.content | htmlTrust)"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="demo-right">时间:{[{data.timeStamp}]}</span> </li>
+
+              <li class="palette palette-orange" ng-if="data.level=='WARNNING' && curLevel>=data.levelN" > <span ng-bind-html="(data.content | htmlTrust)"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="demo-right">时间:{[{data.timeStamp}]}</span> </li>
+
+              <li class="palette palette-peter-river" ng-if="data.level=='INFO' && curLevel>=data.levelN" > <span ng-bind-html="(data.content | htmlTrust)"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="demo-right">时间:{[{data.timeStamp}]}</span> </li>
+
+              <li class="palette palette-nephritis" ng-if="data.level=='DEBUG' && curLevel>=data.levelN" > <span ng-bind-html="(data.content | htmlTrust)"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="demo-right">时间:{[{data.timeStamp}]}</span> </li>
+
+              <li class="palette palette-concrete" ng-if="data.level=='VERBOSE' && curLevel>=data.levelN" > <span ng-bind-html="(data.content | htmlTrust)"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="demo-right">时间:{[{data.timeStamp}]}</span> </li>
+              
+            </ul>
+        </section>
+
+        <script src="/asset/js/jquery.min.js"></script>
+        <script src="/asset/js/bootstrap.min.js" ></script>
+        <script src="/asset/js/jquery.min.js"></script>
+        <script src="/asset/js/flat-ui.min.js"></script>
+        <script src="/asset/js/angular.min.js"></script>
+        <script src="/asset/js/angular-websocket.js"></script>
+        <script src="/asset/js/scrollglue.js"></script>
+        <script src="/asset/js/debug_service.js"></script>
+        <script src="/asset/js/debug.js"></script>
+        <script src="/asset/js/angular-sanitize.js"></script>
+        <script src="/asset/js/application.js"></script>
+    </body>
+</html>

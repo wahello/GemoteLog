@@ -1,0 +1,71 @@
+<!doctype html>
+<html ng-app="LogChecker">
+    <head>
+        <title>网络调试日志</title>
+        <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+        <link rel="stylesheet" href="./asset/css/bootstrap.min.css">
+        <link href="./asset/css/flat-ui.css" rel="stylesheet">
+
+        <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+        
+        <link href="./asset/css/index.css" rel="stylesheet">
+
+    </head>
+
+    <body style="height:100%" class ="palette palette-clouds" ng-controller="networkController">
+        <h2 style="text-align: center;">网络日志</h2>
+
+
+        <section  class="palette palette-clouds ">
+
+            <!--<h3 class="demo-panel-title">过滤</h3>-->
+            <div class="row demo-row">
+                <div class="col-xs-2">
+                  <div class=" has-success">
+                    <input type="text" value="" placeholder="==ERROR==" class="form-control" ng-model="filterValue"  />
+                    <span class="input-icon fui-check-inverted"></span>
+                  </div>
+                </div>
+                <div class="col-xs-2">
+                  <a href="#fakelink" class="btn btn-block btn-lg btn-primary" ng-click="doFilter()">only show</a>
+                </div>
+
+                <div class="col-xs-2">
+                  <a href="#fakelink" class="btn btn-block btn-lg btn-primary" ng-click="doClear()">Clear</a>
+                </div>
+
+                <div class="col-xs-3 demo-col">
+                        <select class="form-control select-primary multiselect multiselect-info" data-toggle="select" ng-init="selectedName = clientIp" data-ng-model="clientIp" ng-options="x for x in MyData.clients" style="min-width: 160px;"  multiple="multiple" >
+                            <option value="" disabled>clientFilter</option>
+                        </select>
+                   
+                        <kbd>{[{clientsTxt}]}</kbd>
+                   
+                </div>
+            </div>
+        </section>
+
+        <section class="palette palette-clouds"  scroll-glue style="overflow-x: hidden;">
+            <ul ng-repeat="data in MyData.debugLogs | filter: myfilter" >
+              <li class="palette palette-wet-asphalt" ng-if="data.content=='--' && curLevel==4" style="text-align:center"> ------------------------------------------------------------------ 分割线 ------------------------------------------------------------------{[{data.timeStamp}]}</li>
+              <li class="palette palette-asbestos"> <span ng-bind-html="(data.content | htmlTrust)"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="demo-right">时间:{[{data.timeStamp}]}</span> </li>
+
+              
+            </ul>
+        </section>
+
+        <script src="./asset/js/jquery.min.js"></script>
+        <script src="./asset/js/bootstrap.min.js" ></script>
+        <script src="./asset/js/jquery.min.js"></script>
+        <script src="./asset/js/flat-ui.min.js"></script>
+        <script src="./asset/js/angular.min.js"></script>
+        <script src="./asset/js/angular-websocket.js"></script>
+        <script src="./asset/js/scrollglue.js"></script>
+        <script src="./asset/js/network_service.js"></script>
+        <script src="/asset/js/angular-sanitize.js"></script>
+        <script src="./asset/js/jquery.toaster.js"></script>
+         <script src="./asset/js/network.js"></script>
+
+        <script src="./asset/js/application.js"></script>
+    </body>
+</html>
