@@ -1,0 +1,7 @@
+#!/bin/bash
+
+SHELL_FOLDER=$(dirname "$0")
+echo ${SHELL_FOLDER}
+cd ${SHELL_FOLDER}
+
+./gemoteLog

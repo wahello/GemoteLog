@@ -1,0 +1,111 @@
+<!doctype html>
+<html ng-app="LogChecker">
+    <head>
+        <title>酷我日志验收</title>
+        <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+        <link rel="stylesheet" href="/asset/css/bootstrap.min.css">
+        <link href="/asset/css/flat-ui.css" rel="stylesheet">
+
+        <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+        <script src="/asset/js/jquery.min.js"></script>
+        <script src="/asset/js/bootstrap.min.js" ></script>
+        <script src="/asset/js/jquery.min.js"></script>
+        <script src="/asset/js/flat-ui.min.js"></script>
+        <script src="/asset/js/angular.min.js"></script>
+        <script src="/asset/js/angular-websocket.js"></script>
+        <script src="/asset/js/scrollglue.js"></script>
+        <script src="/asset/js/index.js"></script>
+        <script src="/asset/js/qrcode.js"></script>
+
+        <script src="/asset/js/application.js"></script>
+        <script src="/asset/js/angular-sanitize.js"></script>
+        <script src="/asset/js/jquery.toaster.js"></script>
+        <link href="/asset/css/index.css" rel="stylesheet">
+
+        <script src="/asset/js/index_service.js"></script>
+    </head>
+
+    <body style="height:100%" class =" palette-clouds" ng-controller="indexController">
+        <h3 style="text-align: center;margin-top: 15px;">酷我日志验收 
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="margin-left: 20px">二维码 </button>
+            <a type="button" class="btn btn-primary" data-toggle="modal" style="margin-left: 20px" href="/user.html">使用说明 </a><a type="button" class="btn btn-primary" data-toggle="modal" style="margin-left: 20px" href="/network">网络 </a>
+        </h3>
+        <section  class="palette palette-clouds ">
+
+            <!--<h3 class="demo-panel-title">过滤</h3>-->
+            <div class="row demo-row">
+                <div class="col-xs-3 demo-col">
+                  <div class="tagsinput-primary col-xs-8" style="padding-left: 0px;padding-right: 3px;">
+                  <!--<div class=" has-success col-xs-8 demo-col" style="padding-left: 0px;padding-right: 3px;">-->
+                    <!--<input type="text" value="" placeholder="VIDEO_LOG" class="form-control" ng-model="filterValue"  /> -->
+                    <input name="tagsinput" class="tagsinput" data-role="tagsinput" value="" ng-model="filterValue" />
+                    <span class="input-icon fui-check-inverted"></span>
+                  </div>
+                  <div class="col-xs-4 demo-col" style="padding-left: 0px;padding-right: 0px">
+                      <a href="#fakelink" ng-class="{'btn btn-block demo-btn btn-primary': isFileter, 'btn btn-block demo-btn btn-info': isnFileter}" class="" ng-click="doFilter()">Filter</a>
+                    </div>
+                </div>
+                
+                <div class="col-xs-4 demo-col">
+                   <div class="tagsinput-primary col-xs-8" style="padding-left: 0px;padding-right: 3px;">
+                    <input name="tagsinput" class="tagsinput" data-role="tagsinput" value="" ng-model="colorColums" />
+                    </div>
+                    <div class="col-xs-4 demo-col" style="padding-left: 0px;padding-right: 0px">
+                      <a href="#fakelink" class="btn btn-block demo-btn btn-primary" ng-click="doColorize()" >Colorize</a>
+                    </div>
+                </div>
+                
+                <div class="col-xs-2 demo-col">
+                    <div class="col-xs-6 demo-col" style="padding-left: 0px;padding-right: 3px;">
+                      <a href="#fakelink" class="btn btn-block demo-btn btn-primary" ng-click="doClear()">Clear</a>
+                    </div>
+                    <div class="col-xs-6 demo-col" style="padding-left: 0px;padding-right: 0px">
+                      <a href="#fakelink" class="btn btn-block demo-btn btn-primary" ng-click="showSimple()" >{[{simpleBtnText}]}</a>
+                    </div>
+                </div>
+
+                <div class="col-xs-3 demo-col">
+                        <select class="form-control select-primary multiselect multiselect-info" data-toggle="select" ng-init="selectedName = clientIp" data-ng-model="clientIp" ng-options="x for x in MyData.clients" style="min-width: 160px;"  multiple="multiple" >
+                            <option value="" disabled>clientFilter</option>
+                        </select>
+                   
+                        <kbd>{[{clientsTxt}]}</kbd>
+                   
+                </div>
+            </div>
+
+        </section>
+
+        <section class="palette palette-clouds"  scroll-glue style="overflow-x: hidden;">
+            <ul ng-repeat="data in MyData.collection |filter: myfilter" >
+              <li class="palette palette-wet-asphalt" ng-if="data.content=='--'" style="text-align:center"> ------------------------------------------------------------------ 分割线 ------------------------------------------------------------------</li>
+              <li class="palette palette-asbestos" ng-if="data.content!='--'" ng-bind-html="(data.content | htmlTrust )" ng-model-options='{ debounce: 1000 }'> {[{data.timeStamp}]} </li>
+              
+            </ul>
+        </section>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document" style="width: 450px">
+            <div class="modal-content">
+              <div class="modal-body" id="qrcode" style="text-align: center;">
+                <!--<img src="/asset/img/brcode.png" class="rounded float-right"  style="width: 400px;">-->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript">
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+          text: location.host,
+          width: 400,
+          height: 400,
+          colorDark : "#000000",
+          colorLight : "#ffffff",
+          correctLevel : QRCode.CorrectLevel.H
+        });
+        </script>
+    </body>
+</html>
