@@ -1,44 +1,57 @@
 package controllers
 
 import (
-	"github.com/kataras/iris"
+	"io/ioutil"
+	"log"
+	"net"
+	"net/http"
+	"strings"
+
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
 	"github.com/kataras/neffos"
 )
 
 type IndexController struct {
-	Ctx iris.Context
-	server *neffos.Server
+	Ctx     iris.Context
+	Server  *neffos.Server
 	Session *sessions.Session
 }
-
-func NewIndex(server *neffos.Server) *IndexController{
-
-	return &IndexController{server: server}
-}
-
 
 func (c *IndexController) Get() mvc.Result {
 
 	return mvc.View{
 		Name: "index.html",
-		// Data: map[string]interface{}{
-		// "Title": "Hello Page",
-		// },
 	}
 }
 
-func (c *IndexController) Post() mvc.Result{
+func getIP(req *http.Request) string {
 
-	//rawBodyAsBytes, err := ioutil.ReadAll(ctx.Request().Body)
-	//if err != nil { /* handle the error */ ctx.Writef("%v", err) }
-	//
-	//rawBodyAsString := string(rawBodyAsBytes)
+	ip, _, err := net.SplitHostPort(req.RemoteAddr)
+	if err == nil {
+		return  ip
+	}
+
+	forward := req.Header.Get("X-Forwarded-For")
+	return forward
+
+}
+
+func (c *IndexController) Post() mvc.Result {
+	clientip := getIP(c.Ctx.Request())
+	log.Printf(" remote IP [%s]", c.Ctx.RemoteAddr())
+
+	rawBodyAsBytes, err := ioutil.ReadAll(c.Ctx.Request().Body)
+	if err != nil { /* handle the error */
+		c.Ctx.Writef("%v", err)
+	}
+
+	rawBodyAsString := string(rawBodyAsBytes)
 	//println(rawBodyAsString)
-	//
-	////c.Ctx.Request().Body
-	//fmt.Print(c.Ctx.Request().Body)
+	msgs := strings.Join([]string{clientip, rawBodyAsString}, " =-= ")
+
+	c.Server.Broadcast(nil, neffos.Message{Body: []byte(msgs)})
 	return mvc.Response{
 		Err: nil,
 	}

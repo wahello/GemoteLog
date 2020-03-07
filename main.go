@@ -42,31 +42,8 @@ func newApp() *iris.Application {
 		ctx.View("error.html")
 	})
 
-
-	////websocket
-	////接收消息回调
-	//ws := websocket.New(websocket.DefaultGorillaUpgrader, websocket.Events{
-	//	websocket.OnNativeMessage: func(nsConn *websocket.NSConn, msg websocket.Message) error {
-	//		log.Printf("Server got: %s from [%s]", msg.Body, nsConn.Conn.ID())
-	//
-	//		nsConn.Conn.Server().Broadcast(nsConn, msg)
-	//		return nil
-	//	},
-	//})
-	//
-	////连接回调
-	//ws.OnConnect = func(c *websocket.Conn) error {
-	//	log.Printf("[%s] Connected to server!", c.ID())
-	//	return nil
-	//}
-	//
-	//ws.OnDisconnect = func(c *websocket.Conn) {
-	//	log.Printf("[%s] Disconnected from server", c.ID())
-	//}
-
 	ws := new(utils.WebsocketManage).Handler()
 	app.Get("/ws", websocket.Handler(ws))
-
 
 
 	// "/user" based mvc application.
@@ -78,13 +55,11 @@ func newApp() *iris.Application {
 	//index
 	rindex := mvc.New(app.Party("/", adminMiddleware))
 	rindex.
-		//Register(func(ctx iris.Context) context.Context {
-		//	return ctx.Request().Context()
-		//}).
 		Register(
 		sessManager.Start,
+		ws,
 		).
-		Handle(controllers.NewIndex(ws))
+		Handle(&controllers.IndexController{})
 
 	return app
 }
