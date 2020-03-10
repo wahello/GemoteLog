@@ -1,4 +1,4 @@
-module github.com/ytlvy/gemoteLog
+module github.com/ytlvy/gemote
 
 go 1.14
 

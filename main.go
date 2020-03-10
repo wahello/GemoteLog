@@ -7,12 +7,11 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
 	"github.com/kataras/iris/v12/websocket"
-	"github.com/ytlvy/gemoteLog/controllers"
-	"github.com/ytlvy/gemoteLog/utils"
+	"github.com/ytlvy/gemote/src/controllers"
+	"github.com/ytlvy/gemote/src/utils"
 	"time"
 )
 
-const namespace = "default"
 
 func newApp() *iris.Application {
 
@@ -39,7 +38,7 @@ func newApp() *iris.Application {
 	app.OnAnyErrorCode(func(ctx iris.Context) {
 		ctx.ViewData("Message", ctx.Values().
 			GetStringDefault("message", "The page you're looking for doesn't exist"))
-		ctx.View("error.html")
+		_ = ctx.View("error.html")
 	})
 
 	ws := new(utils.WebsocketManage).Handler()
@@ -53,8 +52,8 @@ func newApp() *iris.Application {
 	})
 
 	//index
-	rindex := mvc.New(app.Party("/", adminMiddleware))
-	rindex.
+	routeIndex := mvc.New(app.Party("/", adminMiddleware))
+	routeIndex.
 		Register(
 		sessManager.Start,
 		ws,
@@ -69,8 +68,7 @@ func main() {
 	app := newApp()
 
 	//run server
-	app.Run(
-		// Starts the web server at localhost:8080
+	_ = app.Run(
 		iris.Addr(":8080"),
 		// Ignores err server closed log when CTRL/CMD+C pressed.
 		iris.WithoutServerError(iris.ErrServerClosed),
@@ -85,6 +83,6 @@ func adminMiddleware(ctx iris.Context) {
 }
 
 func notFoundHandler(ctx iris.Context) {
-	ctx.HTML("Custom route for 404 not found http code, here you can render a view, html, json <b>any valid response</b>.")
+	_, _ = ctx.HTML("Custom route for 404 not found http code, here you can render a view, html, json <b>any valid response</b>.")
 }
 
