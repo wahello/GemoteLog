@@ -19,11 +19,9 @@ type IndexController struct {
 	Session *sessions.Session
 }
 
-func (c *IndexController) Get() mvc.Result {
+func (c *IndexController) Get() {
 
-	return mvc.View{
-		Name: "index.html",
-	}
+	c.Ctx.ServeFile("./public/views/index.html", false)
 }
 
 func getIP(req *http.Request) string {

@@ -4,11 +4,11 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"
-	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
-	"github.com/kataras/iris/v12/websocket"
-	"github.com/ytlvy/gemote/src/controllers"
-	"github.com/ytlvy/gemote/src/utils"
+	"github.com/ytlvy/gemote/src/datasource"
+	"github.com/ytlvy/gemote/src/repositories"
+	"github.com/ytlvy/gemote/src/route"
+	"github.com/ytlvy/gemote/src/services"
 	"time"
 )
 
@@ -23,13 +23,12 @@ func newApp() *iris.Application {
 	app.Use(recover.New())
 	app.Use(logger.New())
 
-	// Load the template files.
-	// tmpl := iris.HTML("./public/views", ".html").
-	// 	// 	Layout("shared/layout.html").
-	// 	Reload(true)
-	// app.RegisterView(tmpl)
+	//Load the template files.
+	tmpl := iris.HTML("./public/views", ".html").
+		Layout("shared/layout.html").
+		Reload(true)
+	app.RegisterView(tmpl)
 
-	app.RegisterView(iris.HTML("./public/views", ".html"))
 
 	//固定资源
 	app.HandleDir("/asset", "./public/asset")
@@ -41,26 +40,31 @@ func newApp() *iris.Application {
 		_ = ctx.View("error.html")
 	})
 
-	ws := new(utils.WebsocketManage).Handler()
-	app.Get("/ws", websocket.Handler(ws))
+	service := userService(app)
 
-
-	// "/user" based mvc application.
-	sessManager := sessions.New(sessions.Config{
-		Cookie:  "sessioncookiename",
+	// session
+	sessManage := sessions.New(sessions.Config{
+		Cookie:"ytlvy.com",
 		Expires: 24 * time.Hour,
 	})
 
-	//index
-	routeIndex := mvc.New(app.Party("/", adminMiddleware))
-	routeIndex.
-		Register(
-		sessManager.Start,
-		ws,
-		).
-		Handle(&controllers.IndexController{})
+
+	router := route.New(app, sessManage)
+	router.Index()
+	router.Users()
+	router.User(service)
 
 	return app
+}
+
+func userService(app *iris.Application) services.UserService {
+	//service
+	db, err := datasource.LoadUsers(datasource.Memory)
+	if err != nil {
+		app.Logger().Fatalf("error while loading the user: %v", err)
+	}
+	repo := repositories.NewUserRepository(db)
+	return services.NewUserService(repo)
 }
 
 
@@ -77,10 +81,6 @@ func main() {
 	)
 }
 
-func adminMiddleware(ctx iris.Context) {
-	// [...]
-	ctx.Next() // to move to the next handler, or don't that if you have any auth logic.
-}
 
 func notFoundHandler(ctx iris.Context) {
 	_, _ = ctx.HTML("Custom route for 404 not found http code, here you can render a view, html, json <b>any valid response</b>.")
