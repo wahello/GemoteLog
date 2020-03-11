@@ -1,15 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"
-	"github.com/kataras/iris/v12/sessions"
+	"github.com/ytlvy/gemote/src/utils"
+
 	"github.com/ytlvy/gemote/src/datasource"
 	"github.com/ytlvy/gemote/src/repositories"
 	"github.com/ytlvy/gemote/src/route"
 	"github.com/ytlvy/gemote/src/services"
-	"time"
+	"flag"
 )
 
 
@@ -29,6 +31,11 @@ func newApp() *iris.Application {
 		Reload(true)
 	app.RegisterView(tmpl)
 
+	//app.Use(func(ctx iris.Context) {
+	//	ctx.Application().Logger().Infof("Path: %s", ctx.Path())
+	//	ctx.Next()
+	//})
+
 
 	//固定资源
 	app.HandleDir("/asset", "./public/asset")
@@ -42,14 +49,15 @@ func newApp() *iris.Application {
 
 	service := userService(app)
 
-	// session
-	sessManage := sessions.New(sessions.Config{
-		Cookie:"ytlvy.com",
-		Expires: 24 * time.Hour,
-	})
 
+	sessionManager := utils.Sess
+	//app.Use(func(ctx iris.Context) {
+	//	if ctx.Path() != "/user/login" {
+	//	}
+	//	ctx.Next()
+	//})
 
-	router := route.New(app, sessManage)
+	router := route.New(app, sessionManager)
 	router.Index()
 	router.Users()
 	router.User(service)
@@ -67,20 +75,23 @@ func userService(app *iris.Application) services.UserService {
 	return services.NewUserService(repo)
 }
 
+var port = flag.Int("p", 8080, "server port")
+
 
 func main() {
 	app := newApp()
 
+	flag.Parse()
 	//run server
+	address := fmt.Sprintf(":%d", *port)
 	_ = app.Run(
-		iris.Addr(":8080"),
+		iris.Addr(address),
 		// Ignores err server closed log when CTRL/CMD+C pressed.
 		iris.WithoutServerError(iris.ErrServerClosed),
 		// Enables faster json serialization and more.
 		iris.WithOptimizations,
 	)
 }
-
 
 func notFoundHandler(ctx iris.Context) {
 	_, _ = ctx.HTML("Custom route for 404 not found http code, here you can render a view, html, json <b>any valid response</b>.")
