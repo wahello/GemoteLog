@@ -60,8 +60,7 @@ func (r *mainRouter) User(userService services.UserService) {
 
 
 func adminMiddleware(ctx iris.Context) {
-	sess := utils.Sess.Start(ctx)
-	if !utils.IsLoggedIn(sess) {
+	if !utils.GetLoginInstance().IsLoggedIn() {
 		ctx.Redirect("/user/login")
 		return
 	}

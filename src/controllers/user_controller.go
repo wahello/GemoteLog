@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"github.com/kataras/iris/v12/sessions"
 
 	"github.com/ytlvy/gemote/src/datamodels"
 	"github.com/ytlvy/gemote/src/services"
@@ -14,7 +13,6 @@ import (
 type UserController struct {
 	Ctx iris.Context
 	Service services.UserService
-	Session *sessions.Session
 }
 
 
@@ -27,8 +25,8 @@ var registerStaticView = mvc.View{
 func (c *UserController) GetRegister() mvc.Result {
 
 
-	if utils.IsLoggedIn(c.Session) {
-		utils.Logout(c.Session)
+	if utils.GetLoginInstance().IsLoggedIn() {
+		utils.GetLoginInstance().Logout()
 	}
 
 	return registerStaticView
@@ -46,7 +44,7 @@ func (c *UserController) PostRegister() mvc.Result {
 		Firstname:firstname,
 	})
 
-	utils.UpdateUserID(u.ID, c.Session)
+	utils.GetLoginInstance().UpdateUserID(u.ID)
 
 	return mvc.Response {
 		Err:err,
@@ -62,9 +60,9 @@ var loginStaticView = mvc.View{
 
 // GetLogin handles GET: http://localhost:8080/user/login.
 func (c *UserController) GetLogin() mvc.Result {
-	if utils.IsLoggedIn(c.Session) {
+	if utils.GetLoginInstance().IsLoggedIn() {
 		// if it's already logged in then destroy the previous session.
-		utils.Logout(c.Session)
+		utils.GetLoginInstance().Logout()
 	}
 
 	return loginStaticView
@@ -85,26 +83,26 @@ func (c *UserController) PostLogin() mvc.Result {
 		}
 	}
 
-	utils.UpdateUserID(u.ID, c.Session)
+	utils.GetLoginInstance().UpdateUserID(u.ID)
 
 	return mvc.Response{
-		Path: "/user/me",
+		Path: "/",
 	}
 }
 
 // GetMe handles GET: http://localhost:8080/user/me.
 func (c *UserController) GetMe() mvc.Result {
-	if !utils.IsLoggedIn(c.Session) {
+	if !utils.GetLoginInstance().IsLoggedIn() {
 		// if it's not logged in then redirect user to the login page.
 		return mvc.Response{Path: "/user/login"}
 	}
 
-	u, found := c.Service.GetByID(utils.GetCurrentUserID(c.Session))
+	u, found := c.Service.GetByID(utils.GetLoginInstance().GetCurrentUserID())
 	if !found {
 		// if the  session exists but for some reason the user doesn't exist in the "database"
 		// then logout and re-execute the function, it will redirect the client to the
 		// /user/login page.
-		utils.Logout(c.Session)
+		utils.GetLoginInstance().Logout()
 		return c.GetMe()
 	}
 
@@ -119,8 +117,8 @@ func (c *UserController) GetMe() mvc.Result {
 
 // AnyLogout handles All/Any HTTP Methods for: http://localhost:8080/user/logout.
 func (c *UserController) AnyLogout() {
-	if utils.IsLoggedIn(c.Session) {
-		utils.Logout(c.Session)
+	if utils.GetLoginInstance().IsLoggedIn() {
+		utils.GetLoginInstance().Logout()
 	}
 
 	c.Ctx.Redirect("/user/login")

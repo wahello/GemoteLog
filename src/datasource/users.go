@@ -18,5 +18,15 @@ func LoadUsers(engine Engine) (map[int64]datamodels.User, error) {
 		return nil, errors.New("not implemented")
 	}
 
-	return make(map[int64]datamodels.User), nil
+	users := make(map[int64]datamodels.User)
+	admin := datamodels.User{Firstname:"Y.t", Username:"admin", ID:1000}
+
+	hashed, err := datamodels.GeneratePassword("admin")
+	if err == nil {
+
+		admin.HashedPassword = hashed
+		users[0] = admin
+	}
+
+	return users, nil
 }

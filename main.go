@@ -7,11 +7,11 @@ import (
 	"github.com/kataras/iris/v12/middleware/recover"
 	"github.com/ytlvy/gemote/src/utils"
 
+	"flag"
 	"github.com/ytlvy/gemote/src/datasource"
 	"github.com/ytlvy/gemote/src/repositories"
 	"github.com/ytlvy/gemote/src/route"
 	"github.com/ytlvy/gemote/src/services"
-	"flag"
 )
 
 
@@ -51,11 +51,12 @@ func newApp() *iris.Application {
 
 
 	sessionManager := utils.Sess
-	//app.Use(func(ctx iris.Context) {
-	//	if ctx.Path() != "/user/login" {
-	//	}
-	//	ctx.Next()
-	//})
+	app.Use(func(ctx iris.Context) {
+		utils.GetLoginInstance().UpdateSession(ctx)
+		//if ctx.Path() != "/user/login" {
+		//}
+		ctx.Next()
+	})
 
 	router := route.New(app, sessionManager)
 	router.Index()

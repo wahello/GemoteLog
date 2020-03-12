@@ -9,14 +9,12 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"github.com/kataras/iris/v12/sessions"
 	"github.com/kataras/neffos"
 )
 
 type IndexController struct {
 	Ctx     iris.Context
 	Server  *neffos.Server
-	Session *sessions.Session
 }
 
 func (c *IndexController) Get() {

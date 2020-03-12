@@ -53,7 +53,7 @@ func (s *userService) GetByUsernameAndPassword(username, userPassword string) (d
 	return s.repo.Select(func(user datamodels.User) bool {
 		if user.Username == username {
 			hashed := user.HashedPassword
-			if ok, _ := datamodels.ValidatePassword(userPassword, hashed); ok {
+			if ok, _ := datamodels.ValidatePassword(userPassword, []byte(hashed)); ok {
 				return true
 			}
 		}
