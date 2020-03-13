@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"
 	"github.com/ytlvy/gemote/src/utils"
 
 	"flag"
+
 	"github.com/ytlvy/gemote/src/datasource"
 	"github.com/ytlvy/gemote/src/repositories"
 	"github.com/ytlvy/gemote/src/route"
 	"github.com/ytlvy/gemote/src/services"
 )
-
 
 func newApp() *iris.Application {
 
@@ -36,7 +37,6 @@ func newApp() *iris.Application {
 	//	ctx.Next()
 	//})
 
-
 	//固定资源
 	app.HandleDir("/asset", "./public/asset")
 
@@ -48,7 +48,6 @@ func newApp() *iris.Application {
 	})
 
 	service := userService(app)
-
 
 	sessionManager := utils.Sess
 	app.Use(func(ctx iris.Context) {
@@ -78,7 +77,6 @@ func userService(app *iris.Application) services.UserService {
 
 var port = flag.Int("p", 8080, "server port")
 
-
 func main() {
 	app := newApp()
 
@@ -97,4 +95,3 @@ func main() {
 func notFoundHandler(ctx iris.Context) {
 	_, _ = ctx.HTML("Custom route for 404 not found http code, here you can render a view, html, json <b>any valid response</b>.")
 }
-
