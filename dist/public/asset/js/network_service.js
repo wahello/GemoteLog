@@ -1,7 +1,7 @@
 var debug = angular.module('services.network', ['ngSanitize']);
 
 debug.factory('MyData', function($websocket, $sce) {
-    var ws = $websocket("ws://"+location.hostname+":19908/");
+    var ws = $websocket("ws://"+location.hostname+":"+ location.port+"/ws");
     var debugLogs   = [];
     var clients = [];
     var spClient_;

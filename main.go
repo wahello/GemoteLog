@@ -1,11 +1,15 @@
 package main
 
+// cross build for windows
+// GOOS=windows GOARCH=amd64 go build -o gemote-win
+
 import (
 	"fmt"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"
+	"github.com/kataras/iris/v12/websocket"
 	"github.com/ytlvy/gemote/src/utils"
 
 	"flag"
@@ -47,7 +51,7 @@ func newApp() *iris.Application {
 		_ = ctx.View("error.html")
 	})
 
-	service := userService(app)
+	// service := userService(app)
 
 	sessionManager := utils.Sess
 	app.Use(func(ctx iris.Context) {
@@ -57,10 +61,16 @@ func newApp() *iris.Application {
 		ctx.Next()
 	})
 
-	router := route.New(app, sessionManager)
+	ws := new(utils.WebsocketUtil).Handler()
+	app.Get("/ws", websocket.Handler(ws))
+
+	router := route.New(app, sessionManager, ws)
 	router.Index()
-	router.Users()
-	router.User(service)
+	// router.Users()
+	// router.User(service)
+	router.Network()
+	router.Debug()
+	router.About()
 
 	return app
 }

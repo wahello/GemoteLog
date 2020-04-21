@@ -13,8 +13,8 @@ import (
 )
 
 type IndexController struct {
-	Ctx     iris.Context
-	Server  *neffos.Server
+	Ctx    iris.Context
+	Server *neffos.Server
 }
 
 func (c *IndexController) Get() {
@@ -26,7 +26,7 @@ func getIP(req *http.Request) string {
 
 	ip, _, err := net.SplitHostPort(req.RemoteAddr)
 	if err == nil {
-		return  ip
+		return ip
 	}
 
 	forward := req.Header.Get("X-Forwarded-For")

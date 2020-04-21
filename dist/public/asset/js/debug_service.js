@@ -2,7 +2,7 @@ var debug = angular.module('services.debug', ['ngSanitize']);
 
 debug.factory('MyData', function($websocket, $sce) {
     // Open a WebSocket connection
-    var ws = $websocket("ws://"+location.hostname+":19908/");
+    var ws = $websocket("ws://"+location.hostname+":"+ location.port+"/ws");
     var debugLogs   = [];
     ws.onMessage(function(event) {
 
