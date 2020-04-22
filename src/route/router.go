@@ -36,6 +36,12 @@ func (r *mainRouter) Index() {
 			r.ws,
 		).
 		Handle(&controllers.IndexController{})
+	mvc.New(r.app.Party("/music.yl", adminMiddleware)).
+		Register(
+			r.session.Start,
+			r.ws,
+		).
+		Handle(&controllers.AndroidController{})
 }
 
 func (r *mainRouter) Network() {

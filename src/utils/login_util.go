@@ -34,7 +34,6 @@ func (c *LoginUtil) UpdateSession(ctx iris.Context) {
 		panic("ctx should not be nil")
 		return
 	}
-
 	// c.session = Sess.Start(ctx)
 }
 
