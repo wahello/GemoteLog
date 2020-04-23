@@ -13,8 +13,9 @@ var (
 	once                   sync.Once
 	cookieNameForSessionID = "ytlvy.com"
 	Sess                   = sessions.New(sessions.Config{
-		Cookie:  cookieNameForSessionID,
-		Expires: 24 * time.Hour,
+		Cookie:                      cookieNameForSessionID,
+		Expires:                     24 * time.Hour,
+		DisableSubdomainPersistence: true,
 	})
 )
 
@@ -34,7 +35,7 @@ func (c *LoginUtil) UpdateSession(ctx iris.Context) {
 		panic("ctx should not be nil")
 		return
 	}
-	// c.session = Sess.Start(ctx)
+	c.session = Sess.Start(ctx)
 }
 
 const userIDKey = "UserID"

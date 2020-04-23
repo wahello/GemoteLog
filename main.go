@@ -1,7 +1,7 @@
 package main
 
 // cross build for windows
-// GOOS=windows GOARCH=amd64 go build -o gemote-win
+// GOOS=windows GOARCH=amd64 go build -o gemote-win.exe
 
 import (
 	"fmt"
@@ -36,10 +36,10 @@ func newApp() *iris.Application {
 		Reload(true)
 	app.RegisterView(tmpl)
 
-	//app.Use(func(ctx iris.Context) {
-	//	ctx.Application().Logger().Infof("Path: %s", ctx.Path())
-	//	ctx.Next()
-	//})
+	app.Use(func(ctx iris.Context) {
+		ctx.Application().Logger().Infof("Path: %s", ctx.Path())
+		ctx.Next()
+	})
 
 	//固定资源
 	app.HandleDir("/asset", "./public/asset")
@@ -51,7 +51,7 @@ func newApp() *iris.Application {
 		_ = ctx.View("error.html")
 	})
 
-	// service := userService(app)
+	service := userService(app)
 
 	sessionManager := utils.Sess
 	app.Use(func(ctx iris.Context) {
@@ -66,8 +66,8 @@ func newApp() *iris.Application {
 
 	router := route.New(app, sessionManager, ws)
 	router.Index()
-	// router.Users()
-	// router.User(service)
+	router.Users()
+	router.User(service)
 	router.Network()
 	router.Debug()
 	router.About()
