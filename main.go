@@ -2,6 +2,7 @@ package main
 
 // cross build for windows
 // GOOS=windows GOARCH=amd64 go build -o gemote-win.exe
+// CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o gemote-linux
 
 import (
 	"fmt"
