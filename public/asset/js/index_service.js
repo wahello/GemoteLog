@@ -29,7 +29,7 @@ index.factory('MyData', function($websocket, $sce) {
         // }
         var message = event.data;
 
-        var debugPattern =  /^==(\w*)==.*/;
+        var debugPattern =  /.*=-= ==(\w*)==.*/;
         var networkPattern =  /.*==HTTP==.*/;
         
         if(debugPattern.test(message)) {
