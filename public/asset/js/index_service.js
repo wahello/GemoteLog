@@ -13,6 +13,7 @@ index.factory('MyData', function($websocket, $sce) {
     var extColorColums_ = [];
     var clients = [];
     var spClient_;
+    var lastMesg;
 
     var ws = $websocket("ws://"+location.hostname+":"+ location.port+"/ws");
     ws.onMessage(function(event) {
@@ -117,9 +118,12 @@ index.factory('MyData', function($websocket, $sce) {
                 }
             });
         }
+        var ditto = aHtml == lastMesg
+        lastMesg = aHtml
 
         collection.push({
             content: '<div class="demo-line">' +aHtml+"</div>",
+            ditto:ditto,
             timeStamp: event.timeStamp
         });
     };

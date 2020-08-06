@@ -79,7 +79,8 @@
         <section class="palette palette-clouds"  scroll-glue style="overflow-x: hidden;">
             <ul ng-repeat="data in MyData.collection |filter: myfilter" >
               <li class="palette palette-wet-asphalt" ng-if="data.content=='--'" style="text-align:center"> ------------------------------------------------------------------ 分割线 ------------------------------------------------------------------</li>
-              <li class="palette palette-asbestos" ng-if="data.content!='--'" ng-bind-html="(data.content | htmlTrust )" ng-model-options='{ debounce: 1000 }'> {[{data.timeStamp}]} </li>
+              <li class="palette palette-asbestos" ng-if="data.content!='--' && !data.ditto" ng-bind-html="(data.content | htmlTrust )" ng-model-options='{ debounce: 1000 }'> {[{data.timeStamp}]} </li>
+              <li class="palette palette-pomegranate" ng-if="data.ditto" ng-bind-html="(data.content | htmlTrust )" ng-model-options='{ debounce: 1000 }'> {[{data.timeStamp}]} </li>
               
             </ul>
         </section>
