@@ -4,4 +4,4 @@ SHELL_FOLDER=$(dirname "$0")
 echo ${SHELL_FOLDER}
 cd ${SHELL_FOLDER}
 
-./gemoteLog
+nohup ./gemote -p 10088 2>&1 > output & 

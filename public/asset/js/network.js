@@ -6,13 +6,19 @@ angular.module('LogChecker', ['ngWebSocket', 'services.network', 'luegg.directiv
 .controller('networkController', function($scope, MyData) {
     $scope.MyData = MyData;
     $scope.glued = true;
-
+    $scope.colorColums = "";
     $scope.filterValue = "==HTTP==";
     $scope.curLevel = 4;
     var isFileter = false;
     $scope.clientIp= "clientIP";
     $scope.clientsTxt = "(" + MyData.clients.length +")";
 
+    $scope.doColorize = function() {
+        var cols = $scope.colorColums.split(",");
+        $scope.MyData.extendColumn(cols);
+    }
+
+    
     $scope.$watch('clientIp', function(newVal, oldVal){
         $scope.clientIp = newVal;
 

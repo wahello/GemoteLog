@@ -8,7 +8,7 @@ debug.factory('MyData', function($websocket, $sce) {
 
         var message = event.data;
         console.log("RB:" + message);
-        var debugPattern =  /^==(\w*)==.*/;
+        var debugPattern =  /.*=-= ==(\w*)==.*/;
         if(debugPattern.test(message)) {
             paraseDebugLog(message);
         }
@@ -18,7 +18,7 @@ debug.factory('MyData', function($websocket, $sce) {
         
         let errorLevel = ["ERROR", "WARNNING", "INFO", "DEBUG", "VERBOSE"];
 
-        var found = message.match(/^==(\w*)==/);
+        var found = message.match(/.*=-= ==(\w*)==.*/);
         console.log(found);
 
         var levelStr = "";

@@ -7,7 +7,6 @@ import (
 	"github.com/kataras/neffos"
 
 	"github.com/ytlvy/gemote/src/controllers"
-	"github.com/ytlvy/gemote/src/utils"
 
 	//"github.com/ytlvy/gemote/src/repositories"
 	"github.com/ytlvy/gemote/src/services"
@@ -84,10 +83,10 @@ func (r *mainRouter) User(userService services.UserService) {
 }
 
 func adminMiddleware(ctx iris.Context) {
-	if ctx.Request().Method != "POST" && !utils.GetLoginInstance().IsLoggedIn() {
-		ctx.Redirect("/user/login")
-		return
-	}
+	// if ctx.Request().Method != "POST" && !utils.GetLoginInstance().IsLoggedIn() {
+	// 	ctx.Redirect("/user/login")
+	// 	return
+	// }
 
 	ctx.Next() // to move to the next handler, or don't that if you have any auth logic.
 }

@@ -86,7 +86,7 @@ func userService(app *iris.Application) services.UserService {
 	return services.NewUserService(repo)
 }
 
-var port = flag.Int("p", 8080, "server port")
+var port = flag.Int("p", 10088, "server port")
 
 func main() {
 	app := newApp()

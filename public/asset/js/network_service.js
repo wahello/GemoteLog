@@ -5,6 +5,7 @@ debug.factory('MyData', function($websocket, $sce) {
     var debugLogs   = [];
     var clients = [];
     var spClient_;
+    var extColorColums_ = [];
 
     ws.onMessage(function(event) {
 
@@ -48,12 +49,22 @@ debug.factory('MyData', function($websocket, $sce) {
             if(!bShow) return;
         }
 
-        var pattern =  /[<|]URL:([^|]+)/gi
-        var match = pattern.exec(message);
-        if(match) {
-            message = message.replace(match[1], "<a class=\"" + randomColor()  +" demo_highlight\" target=\"_blank\" href=\""+match[1]+"\">"+match[1]+"</a>" );
-        }
+        // var pattern =  /[<|]URL:([^|]+)/gi
+        // var match = pattern.exec(message);
+        // if(match) {
+        //     message = message.replace(match[1], "<a class=\"" + randomColor()  +" demo_highlight\" target=\"_blank\" href=\""+match[1]+"\">"+match[1]+"</a>" );
+        // }
 
+        if(extColorColums_.length > 0) {
+            console.log("进入扩展过滤");
+            extColorColums_.forEach(function(element){
+                var pattern =  eval("/(&"+element+"=[^&\"]+)/gi");
+                var match = pattern.exec(message);
+                if(match) {
+                    message = message.replace(match[1], "<b class=\"" + randomColor()  +"  demo_highlight\">"+match[1]+"</b>" );
+                }
+            });
+        }
 
         var newDate = new Date();
         var dateString = newDate.toLocaleTimeString();
@@ -106,6 +117,9 @@ debug.factory('MyData', function($websocket, $sce) {
         },
         clear: function () {
             debugLogs.length = 0;
+        },
+        extendColumn: function(columns) {
+            extColorColums_ = columns;
         }
     };
 })

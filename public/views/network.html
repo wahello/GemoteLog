@@ -35,6 +35,15 @@
                 </div>
 
                 <div class="col-xs-3 demo-col">
+                  <div class="tagsinput-primary col-xs-8" style="padding-left: 0px;padding-right: 3px;">
+                   <input name="tagsinput" class="tagsinput" data-role="tagsinput" value="" ng-model="colorColums" />
+                   </div>
+                   <div class="col-xs-3 demo-col" style="padding-left: 0px;padding-right: 0px">
+                     <a href="#fakelink" class="btn btn-block demo-btn btn-primary" ng-click="doColorize()" >Colorize</a>
+                   </div>
+               </div>
+
+                <div class="col-xs-3 demo-col">
                         <select class="form-control select-primary multiselect multiselect-info" data-toggle="select" ng-init="selectedName = clientIp" data-ng-model="clientIp" ng-options="x for x in MyData.clients" style="min-width: 160px;"  multiple="multiple" >
                             <option value="" disabled>clientFilter</option>
                         </select>
